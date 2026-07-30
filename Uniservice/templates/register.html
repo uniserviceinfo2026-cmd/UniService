@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <h1>Crear cuenta</h1>
+    <form method="post" class="form">
+        <label>Nombre de usuario
+            <input type="text" name="username" required>
+        </label>
+        <label>Correo
+            <input type="email" name="email" required>
+        </label>
+        <label>Contrasena
+            <input type="password" name="password" required>
+        </label>
+        <label>Universidad
+            <input type="text" name="university" placeholder="Ej. UNI, UCA, UNAN">
+        </label>
+        <label>Carrera
+            <input type="text" name="career" placeholder="Ej. Ingenieria en Sistemas">
+        </label>
+        <button type="submit" class="btn">Registrarme</button>
+    </form>
+    <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesion</a></p>
+</section>
+{% endblock %}

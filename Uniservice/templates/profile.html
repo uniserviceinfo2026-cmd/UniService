@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil{% endblock %}
+
+{% block content %}
+<h1>Hola, {{ logged_user['username'] }}</h1>
+<p class="post-meta">
+    {{ logged_user['university'] or "Universidad no indicada" }}
+    {% if logged_user['career'] %} &middot; {{ logged_user['career'] }}{% endif %}
+</p>
+
+<section>
+    <h2>Mis servicios</h2>
+    <div class="card-grid">
+        {% for service in my_services %}
+            <a href="{{ url_for('service_detail', service_id=service['id']) }}" class="card">
+                <h3>{{ service['title'] }}</h3>
+                <p>{{ service['description'][:100] }}...</p>
+            </a>
+        {% else %}
+            <p>Aun no has publicado ningun servicio.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h2>Mis publicaciones en el foro</h2>
+    <div class="post-list">
+        {% for post in my_posts %}
+            <a href="{{ url_for('forum_post_detail', post_id=post['id']) }}" class="post-row">
+                <div>
+                    <h3>{{ post['title'] }}</h3>
+                </div>
+            </a>
+        {% else %}
+            <p>Aun no has publicado en el foro.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
