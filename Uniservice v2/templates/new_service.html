@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Publicar servicio{% endblock %}
+{% set cat_icons = {'academicos': '📚', 'tecnologia': '💻', 'diseno': '🎨', 'idiomas': '🗣️', 'marketing': '📣', 'eventos': '🎉', 'bienestar': '🌱', 'otros': '✦'} %}
+
+{% block content %}
+<section class="form-page">
+    <h1>Publicar un servicio</h1>
+    <form method="post" class="form">
+        <label>Titulo
+            <input type="text" name="title" required>
+        </label>
+        <label>Descripcion
+            <textarea name="description" rows="5" required></textarea>
+        </label>
+        <label>Categoria
+            <select name="category_id" required>
+                {% for category in categories %}
+                    <option value="{{ category['id'] }}">{{ cat_icons.get(category['slug'], '✦') }} {{ category['name'] }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Precio en cordobas (opcional)
+            <input type="number" step="0.01" min="0" name="price">
+        </label>
+        <label>Modalidad
+            <select name="delivery_mode">
+                <option value="presencial">Presencial</option>
+                <option value="remoto">Remoto</option>
+                <option value="mixto">Mixto</option>
+            </select>
+        </label>
+        <button type="submit" class="btn">Publicar</button>
+    </form>
+</section>
+{% endblock %}

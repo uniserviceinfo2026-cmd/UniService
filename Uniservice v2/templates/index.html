@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}UniService - Inicio{% endblock %}
+{% set cat_icons = {'academicos': '📚', 'tecnologia': '💻', 'diseno': '🎨', 'idiomas': '🗣️', 'marketing': '📣', 'eventos': '🎉', 'bienestar': '🌱', 'otros': '✦'} %}
+
+{% block content %}
+<section class="hero">
+    <h1>Reparaciones, mantenimiento y ayuda entre estudiantes</h1>
+    <p>Encuentra servicios accesibles ofrecidos por otros universitarios, o publica los tuyos y gana experiencia real.</p>
+    <a href="{{ url_for('services') }}" class="btn">Ver servicios</a>
+    <a href="{{ url_for('forum') }}" class="btn btn-secondary">Ir al foro</a>
+</section>
+
+<section>
+    <h2>Categorias</h2>
+    <div class="category-list">
+        {% for category in categories %}
+            <a href="{{ url_for('services', categoria=category['slug']) }}" class="category-chip">
+                <span aria-hidden="true">{{ cat_icons.get(category['slug'], '✦') }}</span> {{ category['name'] }}
+            </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h2>Servicios recientes</h2>
+    <div class="card-grid">
+        {% for service in services %}
+            <a href="{{ url_for('service_detail', service_id=service['id']) }}" class="card">
+                <span class="card-category">{{ cat_icons.get(service['category_name']|lower, '✦') }} {{ service['category_name'] }}</span>
+                <h3>{{ service['title'] }}</h3>
+                <p>{{ service['description'][:110] }}{% if service['description']|length > 110 %}...{% endif %}</p>
+                <div class="card-footer">
+                    <span>{{ service['username'] }}</span>
+                    {% if service['price'] %}
+                        <span class="price">C$ {{ "%.2f"|format(service['price']) }}</span>
+                    {% else %}
+                        <span class="price">A convenir</span>
+                    {% endif %}
+                </div>
+                {% if service['avg_rating'] %}
+                    <span class="rating">★ {{ service['avg_rating'] }} ({{ service['review_count'] }})</span>
+                {% endif %}
+            </a>
+        {% else %}
+            <p>Todavia no hay servicios publicados. ¡Se el primero!</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

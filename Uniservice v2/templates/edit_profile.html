@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Editar perfil{% endblock %}
+
+{% block content %}
+<section class="form-page" style="max-width: 560px;">
+    <h1>Editar perfil</h1>
+
+    <form method="post" class="form" enctype="multipart/form-data">
+        <label>Banner
+            <span class="field-hint">PNG, JPG, GIF o WEBP · maximo 5 MB · ideal 1200x300px</span>
+        </label>
+        <div class="banner-picker">
+            <div class="profile-banner"
+                 {% if user['banner_filename'] %}
+                 style="background-image: url('{{ url_for('static', filename='uploads/banners/' ~ user['banner_filename']) }}');"
+                 {% endif %}>
+            </div>
+            <input type="file" name="banner" accept="image/png,image/jpeg,image/gif,image/webp">
+        </div>
+
+        <label>Foto de perfil
+            <span class="field-hint">PNG, JPG, GIF o WEBP · maximo 5 MB</span>
+        </label>
+        <div class="avatar-picker">
+            <div class="profile-avatar"
+                 {% if user['avatar_filename'] %}
+                 style="background-image: url('{{ url_for('static', filename='uploads/avatars/' ~ user['avatar_filename']) }}');"
+                 {% endif %}>
+                {% if not user['avatar_filename'] %}{{ user['username'][0]|upper }}{% endif %}
+            </div>
+            <input type="file" name="avatar" accept="image/png,image/jpeg,image/gif,image/webp">
+        </div>
+
+        <label>Biografia
+            <textarea name="bio" rows="4" maxlength="280" placeholder="Cuenta algo sobre ti...">{{ user['bio'] or '' }}</textarea>
+        </label>
+
+        <label>Universidad
+            <input type="text" name="university" value="{{ user['university'] or '' }}" placeholder="Ej. UNI, UCA, UNAN">
+        </label>
+        <label>Carrera
+            <input type="text" name="career" value="{{ user['career'] or '' }}" placeholder="Ej. Ingenieria en Sistemas">
+        </label>
+
+        <button type="submit" class="btn">Guardar cambios</button>
+    </form>
+    <p><a href="{{ url_for('user_profile', username=user['username']) }}">← Volver a mi perfil</a></p>
+</section>
+{% endblock %}

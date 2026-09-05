@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <h1>Crear cuenta</h1>
+
+    <div class="role-tabs" role="tablist" aria-label="Tipo de cuenta">
+        <button type="button" class="role-tab" id="tabSolicitante" role="tab"
+                aria-selected="true" aria-controls="none" data-role="solicitante">
+            Busco servicios
+        </button>
+        <button type="button" class="role-tab" id="tabProveedor" role="tab"
+                aria-selected="false" aria-controls="none" data-role="proveedor">
+            Ofrezco servicios
+        </button>
+    </div>
+    <p class="role-hint" id="roleHint">
+        Crea una cuenta para encontrar y contratar servicios de otros estudiantes.
+    </p>
+
+    <form method="post" class="form">
+        <input type="hidden" name="role" id="roleInput" value="{{ role|default('solicitante') }}">
+
+        <label>Nombre de usuario
+            <input type="text" name="username" required>
+        </label>
+        <label>Correo
+            <input type="email" name="email" required>
+        </label>
+        <label>Contrasena
+            <input type="password" name="password" required>
+        </label>
+        <label>Universidad
+            <input type="text" name="university" placeholder="Ej. UNI, UCA, UNAN">
+        </label>
+        <label>Carrera
+            <input type="text" name="career" placeholder="Ej. Ingenieria en Sistemas">
+        </label>
+        <button type="submit" class="btn">Registrarme</button>
+    </form>
+    <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesion</a></p>
+</section>
+
+<script>
+(function () {
+    const tabSolicitante = document.getElementById("tabSolicitante");
+    const tabProveedor = document.getElementById("tabProveedor");
+    const roleInput = document.getElementById("roleInput");
+    const roleHint = document.getElementById("roleHint");
+
+    const hints = {
+        solicitante: "Crea una cuenta para encontrar y contratar servicios de otros estudiantes.",
+        proveedor: "Crea una cuenta para publicar y ofrecer tus propios servicios a otros estudiantes."
+    };
+
+    function setRole(role) {
+        roleInput.value = role;
+        roleHint.textContent = hints[role];
+
+        const isProveedor = role === "proveedor";
+        tabProveedor.classList.toggle("is-active", isProveedor);
+        tabSolicitante.classList.toggle("is-active", !isProveedor);
+        tabProveedor.setAttribute("aria-selected", String(isProveedor));
+        tabSolicitante.setAttribute("aria-selected", String(!isProveedor));
+    }
+
+    tabSolicitante.addEventListener("click", function () { setRole("solicitante"); });
+    tabProveedor.addEventListener("click", function () { setRole("proveedor"); });
+
+    setRole(roleInput.value === "proveedor" ? "proveedor" : "solicitante");
+})();
+</script>
+{% endblock %}

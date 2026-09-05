@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ post['title'] }}{% endblock %}
+
+{% block content %}
+<article class="post-detail">
+    <div class="vote-box">
+        <a href="{{ url_for('vote_forum_post', post_id=post['id'], direction='up') }}" aria-label="Votar a favor">▲</a>
+        <span aria-label="Puntuación: {{ post['score'] }}">{{ post['score'] }}</span>
+        <a href="{{ url_for('vote_forum_post', post_id=post['id'], direction='down') }}" aria-label="Votar en contra">▼</a>
+    </div>
+    <div>
+        <h1>{{ post['title'] }}</h1>
+        <p class="post-meta">Publicado por <a href="{{ url_for('user_profile', username=post['username']) }}">{{ post['username'] }}</a></p>
+        <p class="service-description">{{ post['content'] }}</p>
+
+        {% if images %}
+        <div class="forum-image-gallery">
+            {% for image in images %}
+                <a href="{{ url_for('static', filename='uploads/forum/' ~ image['filename']) }}" target="_blank" rel="noopener">
+                    <img src="{{ url_for('static', filename='uploads/forum/' ~ image['filename']) }}" alt="Imagen adjunta a la publicación">
+                </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</article>
+
+<section class="comments">
+    <h2>Comentarios</h2>
+
+    {% if logged_user %}
+    <form method="post" class="form">
+        <textarea name="content" rows="3" placeholder="Escribe un comentario..." required></textarea>
+        <button type="submit" class="btn">Comentar</button>
+    </form>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Inicia sesion</a> para comentar.</p>
+    {% endif %}
+
+    <div class="comment-list">
+        {% for comment in comments %}
+            <div class="comment">
+                <strong><a href="{{ url_for('user_profile', username=comment['username']) }}">{{ comment['username'] }}</a></strong>
+                <p>{{ comment['content'] }}</p>
+            </div>
+        {% else %}
+            <p>Se el primero en comentar.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

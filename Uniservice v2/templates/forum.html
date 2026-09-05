@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Foro{% endblock %}
+
+{% block content %}
+<div class="section-header">
+    <h1>Foro de la comunidad</h1>
+    {% if logged_user %}
+        <a href="{{ url_for('new_forum_post') }}" class="btn">Nueva pregunta</a>
+    {% endif %}
+</div>
+
+<form method="get" class="filters">
+    <input type="search" name="q" value="{{ query }}" placeholder="Buscar en el foro...">
+    <input type="hidden" name="orden" value="{{ sort }}">
+    <button type="submit" class="btn btn-secondary" style="color: var(--navy) !important; border-color: var(--border);">Buscar</button>
+</form>
+
+<div class="sort-tabs">
+    <a href="{{ url_for('forum', q=query, orden='recientes') }}" class="sort-tab {{ 'is-active' if sort == 'recientes' }}">Recientes</a>
+    <a href="{{ url_for('forum', q=query, orden='top') }}" class="sort-tab {{ 'is-active' if sort == 'top' }}">Más votados</a>
+</div>
+
+<div class="post-list">
+    {% for post in posts %}
+        <a href="{{ url_for('forum_post_detail', post_id=post['id']) }}" class="post-row">
+            <div class="score">{{ post['score'] }}</div>
+            {% if post['thumbnail'] %}
+                <img class="post-thumb" src="{{ url_for('static', filename='uploads/forum/' ~ post['thumbnail']) }}" alt="">
+            {% endif %}
+            <div>
+                <h3>{{ post['title'] }}</h3>
+                <p class="post-meta">{{ post['username'] }} &middot; {{ post['comment_count'] }} comentarios</p>
+            </div>
+        </a>
+    {% else %}
+        {% if query %}
+            <p>No se encontraron publicaciones para "{{ query }}".</p>
+        {% else %}
+            <p>Aun no hay preguntas en el foro. ¡Inicia la conversacion!</p>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
