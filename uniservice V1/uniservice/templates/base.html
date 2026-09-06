@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}UniService{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{{ url_for('index') }}" class="logo">UniService</a>
+        <nav>
+            <a href="{{ url_for('services') }}">Servicios</a>
+            <a href="{{ url_for('forum') }}">Foro</a>
+            {% if logged_user %}
+                <a href="{{ url_for('new_service') }}">Publicar servicio</a>
+                <a href="{{ url_for('profile') }}">{{ logged_user['username'] }}</a>
+                <a href="{{ url_for('logout') }}">Salir</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Iniciar sesion</a>
+                <a href="{{ url_for('register') }}" class="btn-nav">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>UniService &middot; Servicios entre estudiantes universitarios &middot; Nicaragua</p>
+    </footer>
+</body>
+</html>

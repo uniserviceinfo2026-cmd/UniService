@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ service['title'] }}{% endblock %}
+{% set cat_icons = {'academicos': '📚', 'tecnologia': '💻', 'diseno': '🎨', 'idiomas': '🗣️', 'marketing': '📣', 'eventos': '🎉', 'bienestar': '🌱', 'otros': '✦'} %}
+
+{% block content %}
+<article class="service-detail">
+    <span class="card-category">{{ cat_icons.get(service['category_name']|lower, '✦') }} {{ service['category_name'] }}</span>
+    <h1>{{ service['title'] }}</h1>
+    <p class="service-meta">
+        Publicado por <a href="{{ url_for('user_profile', username=service['username']) }}">{{ service['username'] }}</a>
+        {% if service['university'] %} &middot; {{ service['university'] }}{% endif %}
+        {% if service['career'] %} &middot; {{ service['career'] }}{% endif %}
+    </p>
+
+    <p class="service-description">{{ service['description'] }}</p>
+
+    <div class="service-info">
+        <span class="price">
+            {% if service['price'] %}C$ {{ "%.2f"|format(service['price']) }}{% else %}Precio a convenir{% endif %}
+        </span>
+        <span>Modalidad: {{ service['delivery_mode'] }}</span>
+        {% if avg_rating %}
+            <span class="rating">★ {{ avg_rating }}</span>
+        {% endif %}
+    </div>
+</article>
+
+<section class="reviews">
+    <h2>Retroalimentacion</h2>
+
+    {% if logged_user %}
+    <form method="post" class="form review-form">
+        <label>Calificacion
+            <select name="rating" required>
+                <option value="5">5 - Excelente</option>
+                <option value="4">4 - Muy bueno</option>
+                <option value="3">3 - Bueno</option>
+                <option value="2">2 - Regular</option>
+                <option value="1">1 - Malo</option>
+            </select>
+        </label>
+        <label>Comentario
+            <textarea name="comment" rows="3" placeholder="Cuenta tu experiencia..."></textarea>
+        </label>
+        <button type="submit" class="btn">Enviar resena</button>
+    </form>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Inicia sesion</a> para dejar una resena.</p>
+    {% endif %}
+
+    <div class="review-list">
+        {% for review in reviews %}
+            <div class="review">
+                <strong><a href="{{ url_for('user_profile', username=review['username']) }}">{{ review['username'] }}</a></strong>
+                <span class="rating">★ {{ review['rating'] }}</span>
+                {% if review['comment'] %}<p>{{ review['comment'] }}</p>{% endif %}
+            </div>
+        {% else %}
+            <p>Todavia no hay resenas para este servicio.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

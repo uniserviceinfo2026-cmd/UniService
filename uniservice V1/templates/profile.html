@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user['username'] }} · Perfil{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <div class="profile-banner"
+         {% if profile_user['banner_filename'] %}
+         style="background-image: url('{{ url_for('static', filename='uploads/banners/' ~ profile_user['banner_filename']) }}');"
+         {% endif %}>
+    </div>
+
+    <div class="profile-avatar-wrap">
+        <div class="profile-avatar"
+             {% if profile_user['avatar_filename'] %}
+             style="background-image: url('{{ url_for('static', filename='uploads/avatars/' ~ profile_user['avatar_filename']) }}');"
+             {% endif %}>
+            {% if not profile_user['avatar_filename'] %}{{ profile_user['username'][0]|upper }}{% endif %}
+        </div>
+    </div>
+
+    <div class="profile-identity">
+        <div class="profile-identity-info">
+            <h1>{{ profile_user['username'] }}</h1>
+            <p class="post-meta">
+                {{ profile_user['university'] or "Universidad no indicada" }}
+                {% if profile_user['career'] %} &middot; {{ profile_user['career'] }}{% endif %}
+            </p>
+            <span class="profile-role-badge {{ profile_user['role'] }}">
+                {{ "Proveedor de servicios" if profile_user['role'] == 'proveedor' else "Solicitante de servicios" }}
+            </span>
+        </div>
+        {% if is_own %}
+        <div class="profile-edit-btn">
+            <a href="{{ url_for('edit_profile') }}" class="btn btn-secondary" style="color: var(--navy) !important; border-color: var(--border);">Editar perfil</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="profile-bio {{ 'is-empty' if not profile_user['bio'] }}">
+        {{ profile_user['bio'] or "Este usuario aun no ha escrito una descripcion." }}
+    </div>
+</div>
+
+<section>
+    <h2>{{ "Sus" if not is_own else "Mis" }} servicios</h2>
+    <div class="card-grid">
+        {% for service in my_services %}
+            <a href="{{ url_for('service_detail', service_id=service['id']) }}" class="card">
+                <h3>{{ service['title'] }}</h3>
+                <p>{{ service['description'][:100] }}...</p>
+            </a>
+        {% else %}
+            <p>{{ "Este usuario aun no ha publicado ningun servicio." if not is_own else "Aun no has publicado ningun servicio." }}</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h2>{{ "Sus" if not is_own else "Mis" }} publicaciones en el foro</h2>
+    <div class="post-list">
+        {% for post in my_posts %}
+            <a href="{{ url_for('forum_post_detail', post_id=post['id']) }}" class="post-row">
+                <div>
+                    <h3>{{ post['title'] }}</h3>
+                </div>
+            </a>
+        {% else %}
+            <p>{{ "Este usuario aun no ha publicado en el foro." if not is_own else "Aun no has publicado en el foro." }}</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

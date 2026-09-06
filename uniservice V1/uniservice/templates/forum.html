@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Foro{% endblock %}
+
+{% block content %}
+<div class="section-header">
+    <h1>Foro de la comunidad</h1>
+    {% if logged_user %}
+        <a href="{{ url_for('new_forum_post') }}" class="btn">Nueva pregunta</a>
+    {% endif %}
+</div>
+
+<div class="post-list">
+    {% for post in posts %}
+        <a href="{{ url_for('forum_post_detail', post_id=post['id']) }}" class="post-row">
+            <div class="score">{{ post['score'] }}</div>
+            <div>
+                <h3>{{ post['title'] }}</h3>
+                <p class="post-meta">{{ post['username'] }} &middot; {{ post['comment_count'] }} comentarios</p>
+            </div>
+        </a>
+    {% else %}
+        <p>Aun no hay preguntas en el foro. ¡Inicia la conversacion!</p>
+    {% endfor %}
+</div>
+{% endblock %}

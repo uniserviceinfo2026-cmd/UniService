@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Nueva pregunta{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <h1>Nueva pregunta</h1>
+    <form method="post" class="form">
+        <label>Titulo
+            <input type="text" name="title" required>
+        </label>
+        <label>Descripcion
+            <textarea name="content" rows="6" required></textarea>
+        </label>
+        <button type="submit" class="btn">Publicar</button>
+    </form>
+</section>
+{% endblock %}

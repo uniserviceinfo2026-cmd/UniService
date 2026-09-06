@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Nueva pregunta{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <h1>Nueva pregunta</h1>
+    <form method="post" class="form" enctype="multipart/form-data">
+        <label>Titulo
+            <input type="text" name="title" required>
+        </label>
+        <label>Descripcion
+            <textarea name="content" rows="6" required></textarea>
+        </label>
+        <label>Imagenes (opcional)
+            <span class="field-hint">Hasta 5 imagenes · PNG, JPG, GIF o WEBP · maximo 5 MB cada una</span>
+            <input type="file" name="images" accept="image/png,image/jpeg,image/gif,image/webp" multiple>
+        </label>
+        <button type="submit" class="btn">Publicar</button>
+    </form>
+</section>
+{% endblock %}
